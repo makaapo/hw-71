@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import {ApiDish, DishMutation} from '../../types';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {selectCreateDishLoading} from '../../containers/store/dishesSlice';
+import {createDish} from '../../containers/store/dishesThunks';
+import {toast} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
 interface Props {
-  onSubmit: (dish: ApiDish) => void;
   existingDish?: ApiDish;
-  isLoading?: boolean;
 }
 
 const emptyState: DishMutation = {
@@ -14,11 +17,13 @@ const emptyState: DishMutation = {
   price: '',
 };
 
-const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,}) => {
+const DishForm: React.FC<Props> = ({ existingDish }) => {
   const initialState: DishMutation = existingDish
-    ? {...existingDish, price: existingDish.price.toString()}
+    ? { ...existingDish, price: existingDish.price.toString() }
     : emptyState;
-
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isCreating = useAppSelector(selectCreateDishLoading);
   const [dishMutation, setDishMutation] = useState<DishMutation>(initialState);
 
   const changeDish = (
@@ -30,22 +35,29 @@ const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,})
     }));
   };
 
-  const onFormSubmit = (event: React.FormEvent) => {
+  const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    onSubmit({
-      ...dishMutation,
-      price: parseFloat(dishMutation.price),
-    });
+    try {
+      await dispatch(
+        createDish({
+          ...dishMutation,
+          price: parseFloat(dishMutation.price),
+        })
+      ).unwrap();
+      navigate('/');
+      toast.success('Dish created successfully.');
+    } catch (error) {
+      toast.error('Could not create dish');
+    }
   };
 
   return (
     <form onSubmit={onFormSubmit}>
       <h4>{existingDish ? 'Edit dish' : 'Add new dish'}</h4>
       <div className="form-group">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="title">Title</label>
         <input
-          type="title"
+          type="text"
           name="title"
           id="title"
           required
@@ -82,9 +94,9 @@ const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,})
       <button
         type="submit"
         className="btn btn-primary mt-2"
-        disabled={isLoading}
+        disabled={isCreating}
       >
-        {isLoading && <ButtonSpinner/>}
+        {isCreating && <ButtonSpinner />}
         {existingDish ? 'Update' : 'Create'}
       </button>
     </form>
