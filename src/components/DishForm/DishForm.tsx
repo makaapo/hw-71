@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
 import {ApiDish, DishMutation} from '../../types';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectCreateDishLoading} from '../../containers/store/dishesSlice';
-import {createDish} from '../../containers/store/dishesThunks';
-import {toast} from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
 
 interface Props {
+  onSubmit: (dish: ApiDish) => void;
   existingDish?: ApiDish;
+  isLoading?: boolean;
 }
 
 const emptyState: DishMutation = {
@@ -17,13 +14,12 @@ const emptyState: DishMutation = {
   price: '',
 };
 
-const DishForm: React.FC<Props> = ({ existingDish }) => {
+const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,
+                                   }) => {
   const initialState: DishMutation = existingDish
     ? { ...existingDish, price: existingDish.price.toString() }
     : emptyState;
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const isCreating = useAppSelector(selectCreateDishLoading);
+
   const [dishMutation, setDishMutation] = useState<DishMutation>(initialState);
 
   const changeDish = (
@@ -35,20 +31,13 @@ const DishForm: React.FC<Props> = ({ existingDish }) => {
     }));
   };
 
-  const onFormSubmit = async (event: React.FormEvent) => {
+  const onFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      await dispatch(
-        createDish({
-          ...dishMutation,
-          price: parseFloat(dishMutation.price),
-        })
-      ).unwrap();
-      navigate('/');
-      toast.success('Dish created successfully.');
-    } catch (error) {
-      toast.error('Could not create dish');
-    }
+
+    onSubmit({
+      ...dishMutation,
+      price: parseFloat(dishMutation.price),
+    });
   };
 
   return (
@@ -94,9 +83,9 @@ const DishForm: React.FC<Props> = ({ existingDish }) => {
       <button
         type="submit"
         className="btn btn-primary mt-2"
-        disabled={isCreating}
+        disabled={isLoading}
       >
-        {isCreating && <ButtonSpinner />}
+        {isLoading && <ButtonSpinner />}
         {existingDish ? 'Update' : 'Create'}
       </button>
     </form>
