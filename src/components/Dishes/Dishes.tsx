@@ -17,7 +17,7 @@ const Dishes: React.FC = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center mb-5">
         <h2>Dishes</h2>
         <NavLink to="/new-dish" className="btn btn-success">Add new dish</NavLink>
       </div>

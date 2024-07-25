@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {createDish, fetchDishes, fetchOneDish, updateDish} from './dishesThunks';
+import {createDish, deleteDish, fetchDishes, fetchOneDish, updateDish} from './dishesThunks';
 import {ApiDish, Dish} from '../../types';
 
 
@@ -10,6 +10,7 @@ interface DishesState {
   updateLoading: boolean;
   fetchOneLoading: boolean;
   oneDish: null | ApiDish;
+  deleteLoading: false | string;
 }
 
 const initialState: DishesState = {
@@ -19,6 +20,7 @@ const initialState: DishesState = {
   updateLoading: false,
   fetchOneLoading: false,
   oneDish: null,
+  deleteLoading: false,
 };
 
 export const dishesSlice = createSlice({
@@ -54,7 +56,7 @@ export const dishesSlice = createSlice({
         state.oneDish = null;
         state.fetchOneLoading = true;
       })
-      .addCase(fetchOneDish.fulfilled, (state, { payload: apiDish }) => {
+      .addCase(fetchOneDish.fulfilled, (state, {payload: apiDish}) => {
         state.oneDish = apiDish;
         state.fetchOneLoading = false;
       })
@@ -72,6 +74,16 @@ export const dishesSlice = createSlice({
       .addCase(updateDish.rejected, (state) => {
         state.updateLoading = false;
       });
+    builder
+      .addCase(deleteDish.pending, (state, {meta: {arg: dishId} }) => {
+        state.deleteLoading = dishId;
+      })
+      .addCase(deleteDish.fulfilled, (state) => {
+        state.deleteLoading = false;
+      })
+      .addCase(deleteDish.rejected, (state) => {
+        state.deleteLoading = false;
+      });
   },
   selectors: {
     selectDishes: (state) => state.items,
@@ -80,6 +92,7 @@ export const dishesSlice = createSlice({
     selectFetchOneDishLoading: (state) => state.fetchOneLoading,
     selectUpdateDishLoading: (state) => state.updateLoading,
     selectOneDish: (state) => state.oneDish,
+    selectDeleteDishLoading: (state) => state.deleteLoading,
   },
 });
 
@@ -91,5 +104,6 @@ export const {
   selectDishes,
   selectFetchOneDishLoading,
   selectUpdateDishLoading,
-  selectOneDish
+  selectOneDish,
+  selectDeleteDishLoading
 } = dishesSlice.selectors;

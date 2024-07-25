@@ -16,7 +16,7 @@ export const fetchDishes = createAsyncThunk<Dish[], void, {state: RootState}>('d
   return Object.keys(dishes).map((id) =>({
     id,
     ...dishes[id]
-  }))
+  }));
 });
 
 export const fetchOneDish = createAsyncThunk<ApiDish, string, {state: RootState}>(
@@ -43,5 +43,12 @@ export const updateDish = createAsyncThunk<void, UpdateDishArg, {state: RootStat
   'dishes/update',
   async ({id, apiDish }) => {
     await axiosApi.put(`/dishes/${id}.json`, apiDish);
+  },
+);
+
+export const deleteDish = createAsyncThunk<void, string, {state: RootState}>(
+  'dishes/deleteDish',
+  async (dishId) => {
+    await axiosApi.delete('/dishes/' + dishId + '.json');
   },
 );
