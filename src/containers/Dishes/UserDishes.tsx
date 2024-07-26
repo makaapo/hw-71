@@ -1,0 +1,105 @@
+import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../app/store';
+import Spinner from '../../components/Spinner/Spinner';
+import {fetchDishes} from '../store/dishesThunks';
+import {useAppSelector} from '../../app/hooks';
+import {selectDishes, selectFetchDishLoading} from '../store/dishesSlice';
+import DishUserItem from '../../components/DishItem/DishUserItem';
+import Modal from '../../components/Modal/Modal';
+import {Dish} from '../../types';
+import {addDish, clearCart, removeDish, selectCartDishes} from '../store/cartSlice';
+
+const UserDishes = () => {
+  const [showModal, setShowModal] = useState(false);
+  const dishes = useAppSelector(selectDishes);
+  const isFetching = useAppSelector(selectFetchDishLoading);
+  const cartDishes = useAppSelector(selectCartDishes);
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDishes());
+  }, [dispatch]);
+
+  const addToCart = (dish: Dish) => {
+    dispatch(addDish(dish));
+  };
+
+  const deleteCart = (id: string) => {
+    dispatch(removeDish(id));
+  };
+
+  const toOrder = () => {
+    dispatch(clearCart());
+    setShowModal(false);
+  };
+
+  const cartTotal = cartDishes.reduce((sum, cartDish) => {
+    return sum + cartDish.amount * cartDish.dish.price;
+  }, 0);
+  const cartEmpty = cartDishes.length === 0;
+
+  return (
+    <>
+      {isFetching ? (
+        <Spinner />
+      ) : (
+        <>
+          {dishes.map((dish) => (
+            <DishUserItem addToCart={addToCart} key={dish.id} dish={dish} />
+          ))}
+          <div className="text-center">
+            <p>Order total: {cartTotal} KGS</p>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowModal(true)}
+              disabled={cartEmpty}
+            >
+              Checkout
+            </button>
+          </div>
+          <Modal show={showModal} title="Your order" onClose={() => setShowModal(false)}>
+            <div className="modal-body">
+              {cartDishes.length > 0 ? (
+                <>
+                  {cartDishes.map((cartDish) => (
+                    <div key={cartDish.dish.id} className="border border-black p-2 mb-2 rounded d-flex justify-content-between">
+                      <span>{cartDish.dish.title} x {cartDish.amount}</span>
+                      <strong>{cartDish.dish.price * cartDish.amount} KGS</strong>
+                      <button onClick={() => deleteCart(cartDish.dish.id)} className="btn">
+                        <i className="bi bi-trash3-fill"></i>
+                      </button>
+                    </div>
+                  ))}
+                  <div>
+                    <p>Delivery: 150 KGS</p>
+                    <strong>Total: {cartTotal + 150} KGS</strong>
+                    <div className="text-end">
+                      <button
+                        className="btn btn-success me-2"
+                        onClick={toOrder}
+                        disabled={cartEmpty}
+                      >
+                        Order
+                      </button>
+                      <button className="btn btn-danger" onClick={() => setShowModal(false)}>Cancel</button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-center">Cart is empty</p>
+                  <div className="text-end">
+                    <button className="btn btn-danger" onClick={() => setShowModal(false)}>Cancel</button>
+                  </div>
+                </>
+              )}
+            </div>
+          </Modal>
+        </>
+      )}
+    </>
+  );
+};
+
+export default UserDishes;
