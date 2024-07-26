@@ -1,20 +1,25 @@
-import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../../app/store';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../app/store';
 import Spinner from '../../components/Spinner/Spinner';
-import {fetchDishes} from '../store/dishesThunks';
-import {useAppSelector} from '../../app/hooks';
-import {selectDishes, selectFetchDishLoading} from '../store/dishesSlice';
+import { fetchDishes } from '../store/dishesThunks';
+import { useAppSelector } from '../../app/hooks';
+import { selectDishes, selectFetchDishLoading } from '../store/dishesSlice';
 import DishUserItem from '../../components/DishItem/DishUserItem';
 import Modal from '../../components/Modal/Modal';
-import {Dish} from '../../types';
-import {addDish, clearCart, removeDish, selectCartDishes} from '../store/cartSlice';
+import { Dish } from '../../types';
+import { addDish, clearCart, removeDish, selectCartDishes } from '../store/cartSlice';
+import { createOrder } from '../store/orderThunks';
+import {toast} from 'react-toastify';
+import {selectOrderLoading} from '../store/orderSlice';
+import ButtonSpinner from '../../components/Spinner/ButtonSpinner';
 
 const UserDishes = () => {
   const [showModal, setShowModal] = useState(false);
   const dishes = useAppSelector(selectDishes);
   const isFetching = useAppSelector(selectFetchDishLoading);
   const cartDishes = useAppSelector(selectCartDishes);
+  const orderLoading = useAppSelector(selectOrderLoading);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -29,9 +34,15 @@ const UserDishes = () => {
     dispatch(removeDish(id));
   };
 
-  const toOrder = () => {
-    dispatch(clearCart());
-    setShowModal(false);
+  const toOrder = async () => {
+    try {
+      await dispatch(createOrder(cartDishes)).unwrap();
+      dispatch(clearCart());
+      setShowModal(false);
+      toast.success('The order has been sent!');
+    } catch (error) {
+      toast.success('Error when sending order!');
+    }
   };
 
   const cartTotal = cartDishes.reduce((sum, cartDish) => {
@@ -79,8 +90,10 @@ const UserDishes = () => {
                       <button
                         className="btn btn-success me-2"
                         onClick={toOrder}
-                        disabled={cartEmpty}
+                        disabled={orderLoading}
                       >
+                        {orderLoading && (<ButtonSpinner/>)}
+                        <i className="bi bi-check-square-fill me-2"></i>
                         Order
                       </button>
                       <button className="btn btn-danger" onClick={() => setShowModal(false)}>Cancel</button>
