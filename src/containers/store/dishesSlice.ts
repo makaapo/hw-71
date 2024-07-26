@@ -3,7 +3,7 @@ import {createDish, deleteDish, fetchDishes, fetchOneDish, updateDish} from './d
 import {ApiDish, Dish} from '../../types';
 
 
-interface DishesState {
+export interface DishesState {
   items: Dish[];
   createLoading: boolean;
   isFetching: boolean;

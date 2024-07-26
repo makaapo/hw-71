@@ -11,11 +11,11 @@ const Modal: React.FC<Props> = ({show, title, children, onClose}) => {
     <>
       <div
         className="modal-backdrop show"
-        style={{ display: show ? 'block' : 'none' }}
+        style={{display: show ? 'block' : 'none'}}
       />
       <div
         className="modal show"
-        style={{ display: show ? 'block' : 'none' }}
+        style={{display: show ? 'block' : 'none'}}
         onClick={onClose}
       >
         <div

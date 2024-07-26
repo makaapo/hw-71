@@ -14,10 +14,11 @@ const emptyState: DishMutation = {
   price: '',
 };
 
-const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,
+const DishForm: React.FC<Props> = ({
+                                     onSubmit, existingDish, isLoading = false,
                                    }) => {
   const initialState: DishMutation = existingDish
-    ? { ...existingDish, price: existingDish.price.toString() }
+    ? {...existingDish, price: existingDish.price.toString()}
     : emptyState;
 
   const [dishMutation, setDishMutation] = useState<DishMutation>(initialState);
@@ -85,7 +86,7 @@ const DishForm: React.FC<Props> = ({onSubmit, existingDish, isLoading = false,
         className="btn btn-primary mt-2"
         disabled={isLoading}
       >
-        {isLoading && <ButtonSpinner />}
+        {isLoading && <ButtonSpinner/>}
         {existingDish ? 'Update' : 'Create'}
       </button>
     </form>

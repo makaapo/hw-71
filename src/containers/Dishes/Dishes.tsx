@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import {NavLink } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { fetchDishes } from '../../containers/store/dishesThunks';
-import { selectDishes, selectFetchDishLoading } from '../../containers/store/dishesSlice';
-import Spinner from '../Spinner/Spinner';
-import DishItem from '../DishItem/DishItem';
+import React, {useEffect} from 'react';
+import {NavLink} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {fetchDishes} from '../store/dishesThunks';
+import {selectDishes, selectFetchDishLoading} from '../store/dishesSlice';
+import Spinner from '../../components/Spinner/Spinner';
+import DishItem from '../../components/DishItem/DishItem';
 
 const Dishes: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +19,8 @@ const Dishes: React.FC = () => {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-5">
         <h2>Dishes</h2>
-        <NavLink to="/new-dish" className="btn btn-success">Add new dish</NavLink>
+        <NavLink to="/admin/new-dish" className="btn btn-success"><i className="bi bi-plus-square me-2"></i>Add new
+          dish</NavLink>
       </div>
       {isFetching ? (
         <Spinner />

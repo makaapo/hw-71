@@ -55,6 +55,7 @@ const UserDishes = () => {
               onClick={() => setShowModal(true)}
               disabled={cartEmpty}
             >
+              <i className="bi bi-bag-plus me-2"></i>
               Checkout
             </button>
           </div>
@@ -71,9 +72,9 @@ const UserDishes = () => {
                       </button>
                     </div>
                   ))}
-                  <div>
-                    <p>Delivery: 150 KGS</p>
-                    <strong>Total: {cartTotal + 150} KGS</strong>
+                  <div className="mt-4">
+                    <p><i className="bi bi-truck me-2"></i>Delivery: 150 KGS</p>
+                    <strong><i className="bi bi-wallet2 me-2"></i>Total: {cartTotal + 150} KGS</strong>
                     <div className="text-end">
                       <button
                         className="btn btn-success me-2"
