@@ -12,7 +12,7 @@ const DishUserItem: React.FC<Props> = ({dish, addToCart}) => {
   return (
     <div className='btn border d-flex w-50 mx-auto my-3 p-3 align-items-center justify-content-between'
          onClick={() => addToCart(dish)}>
-      <div className="col-sm-3 rounded p-5" style={imageStyle}/>
+      <div className="col-sm-2 rounded p-5" style={imageStyle}/>
       <p className="me-5"><b>{dish.title}</b></p>
       <div className="d-flex">
         <strong className="ms-5">{dish.price} KGZ</strong>

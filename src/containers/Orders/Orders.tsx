@@ -28,7 +28,7 @@ const Orders: React.FC = () => {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner/>;
   }
   return (
     <div className="mt-4">

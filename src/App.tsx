@@ -4,6 +4,7 @@ import Dishes from './containers/Dishes/Dishes';
 import NewDish from './containers/NewDish/NewDish';
 import EditDish from './containers/EditDish/EditDish';
 import UserDishes from './containers/Dishes/UserDishes';
+import Orders from './containers/Orders/Orders';
 
 const App = () => (
   <>
@@ -16,6 +17,7 @@ const App = () => (
         <Route path="/admin" element={<Dishes/>}/>
         <Route path="/admin/dishes" element={<Dishes/>}/>
         <Route path="/admin/new-dish" element={<NewDish/>}/>
+        <Route path="/admin/orders" element={<Orders/>}/>
         <Route path="/admin/edit-dish/:id" element={<EditDish/>}/>
         <Route path="*" element={<h1 className="text-center">Not found</h1>}/>
       </Routes>

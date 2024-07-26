@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../app/store';
+import {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../app/store';
 import Spinner from '../../components/Spinner/Spinner';
-import { fetchDishes } from '../store/dishesThunks';
-import { useAppSelector } from '../../app/hooks';
-import { selectDishes, selectFetchDishLoading } from '../store/dishesSlice';
+import {fetchDishes} from '../store/dishesThunks';
+import {useAppSelector} from '../../app/hooks';
+import {selectDishes, selectFetchDishLoading} from '../store/dishesSlice';
 import DishUserItem from '../../components/DishItem/DishUserItem';
 import Modal from '../../components/Modal/Modal';
-import { Dish } from '../../types';
-import { addDish, clearCart, removeDish, selectCartDishes } from '../store/cartSlice';
-import { createOrder } from '../store/orderThunks';
+import {Dish} from '../../types';
+import {addDish, clearCart, removeDish, selectCartDishes} from '../store/cartSlice';
+import {createOrder} from '../store/orderThunks';
 import {toast} from 'react-toastify';
 import {selectOrderLoading} from '../store/orderSlice';
 import ButtonSpinner from '../../components/Spinner/ButtonSpinner';
@@ -53,11 +53,11 @@ const UserDishes = () => {
   return (
     <>
       {isFetching ? (
-        <Spinner />
+        <Spinner/>
       ) : (
         <>
           {dishes.map((dish) => (
-            <DishUserItem addToCart={addToCart} key={dish.id} dish={dish} />
+            <DishUserItem addToCart={addToCart} key={dish.id} dish={dish}/>
           ))}
           <div className="text-center">
             <p>Order total: {cartTotal} KGS</p>
@@ -75,7 +75,8 @@ const UserDishes = () => {
               {cartDishes.length > 0 ? (
                 <>
                   {cartDishes.map((cartDish) => (
-                    <div key={cartDish.dish.id} className="border border-black p-2 mb-2 rounded d-flex justify-content-between">
+                    <div key={cartDish.dish.id}
+                         className="border border-black p-2 mb-2 rounded d-flex justify-content-between">
                       <span>{cartDish.dish.title} x {cartDish.amount}</span>
                       <strong>{cartDish.dish.price * cartDish.amount} KGS</strong>
                       <button onClick={() => deleteCart(cartDish.dish.id)} className="btn">

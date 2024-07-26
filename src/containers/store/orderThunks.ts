@@ -1,10 +1,10 @@
-import {ApiOrders, Dish, Order, OrdersInfo, CartDish, OrderInfo} from '../../types';
+import {ApiOrders, CartDish, Dish, Order, OrderInfo, OrdersInfo} from '../../types';
 import {RootState} from '../../app/store';
 import axiosApi from '../../axiosApi';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {clearCart} from './cartSlice';
 
-export const fetchOrders = createAsyncThunk<Order[], void, {state: RootState}>(
+export const fetchOrders = createAsyncThunk<Order[], void, { state: RootState }>(
   'orders/fetchOrders',
   async () => {
     const {data: ordersData} = await axiosApi.get<ApiOrders>('/orders.json');

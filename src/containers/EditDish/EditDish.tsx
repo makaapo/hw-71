@@ -33,7 +33,7 @@ const EditDish = () => {
   return (
     <div className="row mt-2">
       <div className="col">
-        {isFetching && <Spinner />}
+        {isFetching && <Spinner/>}
         {dish && (
           <DishForm
             onSubmit={onSubmit}

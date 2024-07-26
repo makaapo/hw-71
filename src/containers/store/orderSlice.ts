@@ -6,7 +6,7 @@ export interface OrdersState {
   orders: Order[];
   loading: boolean;
   isLoading: boolean;
-  deleteOrderLoading: boolean | string
+  deleteOrderLoading: boolean | string;
 }
 
 const initialState: OrdersState = {
