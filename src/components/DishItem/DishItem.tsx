@@ -22,6 +22,9 @@ const DishItem: React.FC<Props> = ({dish}) => {
   };
 
   const removeDish = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this meal?')) {
+      return;
+    }
     try {
       await dispatch(deleteDish(id)).unwrap();
       await dispatch(fetchDishes()).unwrap();
